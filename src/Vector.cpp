@@ -1,5 +1,5 @@
 #include "Vector.h"
-
+#include <omp.h>
 #include <fstream>
 #include <cstdlib>
 using namespace std;
@@ -67,36 +67,51 @@ void Vector::writeFile(int name){
 }
 
 int Vector::iterateRed(){
-    for (int i = 0; i < this->row; i++){
+    int nthreads, tid;
+    #pragma omp parallel private(tid)
+    {
+
+    nthreads = omp_get_num_threads();
+    tid = omp_get_thread_num();
+    for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
         for (int j = 0; j < this->column; j++)
         {
-            if (this->checkPos(i,j)==2){
-                if (this->checkPos(i,(j+1)%this->column) == 0)
+            if (this->checkPos(i*nthreads + tid,j)==2){
+                if (this->checkPos(i*nthreads + tid,(j+1)%column) == 0)
                 {
-                    this->setPos(i,j,0);
-                    this->setPos(i,(j+1)%this->column,2);
+                    this->setPos(i*nthreads + tid,j,0);
+                    this->setPos(i*nthreads + tid,(j+1)%column,2);
                     j++;
                 }
             }
         }
     }
+    }
     return 1;
 }
 
 int Vector::iterateBlue(){
-    for (int i = 0; i < this->column; i++){
-        for (int j = 0; j < this->row; j++)
+    int nthreads, tid;
+    /* Fork a team of threads with each thread having a private tid variable */
+    #pragma omp parallel private(tid)
+    {
+
+    nthreads = omp_get_num_threads();
+    tid = omp_get_thread_num();
+    for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
+        for (int j = 0; j < row; j++)
         {
-            if (this->checkPos(j,i)==1){
-                if (this->checkPos((j+1)%row,i) == 0)
+            if (this->checkPos(j,i*nthreads + tid)==1){
+                if (this->checkPos((j+1)%row,i*nthreads + tid) == 0)
                 {
-                    this->setPos(j,i,0);
-                    this->setPos((j+1)%row,i,1);
+                    this->setPos(j,i*nthreads + tid,0);
+                    this->setPos((j+1)%row,i*nthreads + tid,1);
                     j++;
                 }
             j++;
             }
         }
+    }
     }
     return 1;
 }
