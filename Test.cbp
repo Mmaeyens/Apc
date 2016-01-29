@@ -32,7 +32,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Vector.h">
+			<Option link="1" />
+		</Unit>
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Vector.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
