@@ -23,13 +23,11 @@ Vector::Vector(int i, int j)
         {
             if (test[i] == ','){
                 this->arr[k*column + count] = atoi(test.substr(h,1).c_str());
-                cout << arr[k*column + count];
                 h = i+1;
                 count++;
                 }
             }
         this->arr[k*column + count] = atoi(test.substr(h,test.size()-h).c_str());
-        cout << arr[k*column + count] << "\n";
         k++;
     }
 
@@ -44,7 +42,6 @@ int Vector::checkPos(int i,int j){
     }
 
 void Vector::writeFile(int name){
-    cout << "lets write \n";
     stringstream ss;
     ss << name;
     string str = ss.str();
@@ -54,10 +51,8 @@ void Vector::writeFile(int name){
     outputf.open(c);
     for (int i = 0; i < this->row; i++){
         for (int j = 0; j < ((this->column)-1); j++){
-            cout << arr[column*i+j];
             outputf << arr[column*i+j] << ",";
         }
-        cout << arr[column*i+column -1] << "last \n";
         outputf << this->checkPos(i,column-1)<< "\n";
     }
 
@@ -104,7 +99,6 @@ int Vector::iterateBlue(){
 void Vector::iterate(vector<int> steps){
     int i = 0;
         for (int j = 0; j < steps[i]+1; j++){
-            cout <<  "eerste \n";
             if (j == steps[i]){
                 this->writeFile(steps[i]);
                 i++;
