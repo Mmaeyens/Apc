@@ -18,6 +18,7 @@ class Vector
     protected:
 
     private:
+        bool movedRed,movedBlue;
         int column, row, *arr;
 
 };

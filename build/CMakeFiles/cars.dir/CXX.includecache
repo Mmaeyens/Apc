@@ -1,0 +1,44 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Test/Test/src/Vector.cpp
+Vector.h
+/Test/Test/src/Vector.h
+omp.h
+-
+fstream
+-
+cstdlib
+-
+
+/Test/Test/src/Vector.h
+string
+-
+vector
+-
+sstream
+-
+iostream
+-
+
+/Test/Test/src/main.cpp
+fstream
+-
+stdlib.h
+-
+ostream
+-
+cstdlib
+-
+sstream
+-
+time.h
+-
+Vector.h
+/Test/Test/src/Vector.h
+

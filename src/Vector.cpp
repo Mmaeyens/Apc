@@ -13,8 +13,9 @@ Vector::Vector(int i, int j)
     int k = 0;
     int h = 0;
     int count;
-    ifstream  st("twee.csv");
+    ifstream  st("problem.csv");
     getline(st,test);
+    //read matrix with cars in
     while(getline(st,test))
     {
         count = 0;
@@ -23,13 +24,11 @@ Vector::Vector(int i, int j)
         {
             if (test[i] == ','){
                 this->arr[k*column + count] = atoi(test.substr(h,1).c_str());
-                cout << arr[k*column + count];
                 h = i+1;
                 count++;
                 }
             }
         this->arr[k*column + count] = atoi(test.substr(h,test.size()-h).c_str());
-        cout << arr[k*column + count] << "\n";
         k++;
     }
 
@@ -42,9 +41,8 @@ void Vector::setPos(int i,int j,int value){
 int Vector::checkPos(int i,int j){
     return arr[column*i+j];
     }
-
+// Writes the vector to a csv file
 void Vector::writeFile(int name){
-    cout << "lets write \n";
     stringstream ss;
     ss << name;
     string str = ss.str();
@@ -54,10 +52,8 @@ void Vector::writeFile(int name){
     outputf.open(c);
     for (int i = 0; i < this->row; i++){
         for (int j = 0; j < ((this->column)-1); j++){
-            cout << arr[column*i+j];
             outputf << arr[column*i+j] << ",";
         }
-        cout << arr[column*i+column -1] << "last \n";
         outputf << this->checkPos(i,column-1)<< "\n";
     }
 
@@ -95,7 +91,6 @@ int Vector::iterateBlue(){
     /* Fork a team of threads with each thread having a private tid variable */
     #pragma omp parallel private(tid)
     {
-
     nthreads = omp_get_num_threads();
     tid = omp_get_thread_num();
     for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
@@ -119,12 +114,10 @@ int Vector::iterateBlue(){
 void Vector::iterate(vector<int> steps){
     int i = 0;
         for (int j = 0; j < steps[i]+1; j++){
-            cout <<  "eerste \n";
             if (j == steps[i]){
                 this->writeFile(steps[i]);
                 i++;
                 if (i == steps.size()){
-
                     break;
                     }
                 }
@@ -134,13 +127,10 @@ void Vector::iterate(vector<int> steps){
                 this->writeFile(steps[i]);
                 i++;
                 if (i == steps.size()){
-
                     break;
                 }
             }
             this->iterateRed();
-
-
     }
 }
 void Vector::destroy(){
