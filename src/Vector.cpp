@@ -1,5 +1,4 @@
 #include "Vector.h"
-
 #include <fstream>
 #include <cstdlib>
 using namespace std;
@@ -103,7 +102,6 @@ void Vector::iterate(vector<int> steps){
                 this->writeFile(steps[i]);
                 i++;
                 if (i == steps.size()){
-
                     break;
                     }
                 }
@@ -113,13 +111,10 @@ void Vector::iterate(vector<int> steps){
                 this->writeFile(steps[i]);
                 i++;
                 if (i == steps.size()){
-
                     break;
                 }
             }
             this->iterateRed();
-
-
     }
 }
 void Vector::destroy(){
