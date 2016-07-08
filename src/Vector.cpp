@@ -1,5 +1,4 @@
 #include "Vector.h"
-#include <omp.h>
 #include <fstream>
 #include <cstdlib>
 using namespace std;
@@ -64,25 +63,19 @@ void Vector::writeFile(int name){
 }
 
 int Vector::iterateRed(){
-    int nthreads, tid;
-    #pragma omp parallel private(tid)
-    {
-    nthreads = omp_get_num_threads();
-    tid = omp_get_thread_num();
-    //assigns each thread with own row
-    for (int i = 0; i < row/nthreads + (row%nthreads)/(tid+1); i++){
+    for (int i = 0; i < row; i++){
         //bool to check if first position is free originally
-        bool firstisFree = (this->checkPos(i*nthreads + tid, 0) == 0);
+        bool firstisFree = (this->checkPos(i, 0) == 0);
         for (int j = 0; j < this->column; j++)
         {
-            if (this->checkPos(i*nthreads + tid,j)==2){
+            if (this->checkPos(i,j)==2){
                 if (j == this->column - 1 and !firstisFree) {
                     j++;
                 }
-                else if (this->checkPos(i*nthreads + tid,(j+1)%column) == 0)
+                else if (this->checkPos(i,(j+1)%column) == 0)
                 {
-                    this->setPos(i*nthreads + tid,j,0);
-                    this->setPos(i*nthreads + tid,(j+1)%column,2);
+                    this->setPos(i,j,0);
+                    this->setPos(i,(j+1)%column,2);
                     //jump an extra position
                     j++;
 
@@ -90,38 +83,31 @@ int Vector::iterateRed(){
             }
 
         }
-    }
+
     }
     return 1;
 }
 
 int Vector::iterateBlue(){
-    int nthreads, tid;
-    /* Fork a team of threads with each thread having a private tid variable */
-    #pragma omp parallel private(tid)
-    {
-    nthreads = omp_get_num_threads();
-    tid = omp_get_thread_num();
-    //assigns each thread with own column
-    for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
+    for (int i = 0; i < column; i++){
         //bool to check if first position is free originally
-        bool firstisFree = (this->checkPos(0, i*nthreads + tid) == 0);
+        bool firstisFree = (this->checkPos(0, i) == 0);
         for (int j = 0; j < row; j++)
         {
-            if (this->checkPos(j,i*nthreads + tid)==1){
+            if (this->checkPos(j,i)==1){
                 if (j == row - 1 and !firstisFree) {
                     break;
                 }
-                if (this->checkPos((j+1)%row,i*nthreads + tid) == 0)
+                if (this->checkPos((j+1)%row,i) == 0)
                 {
-                    this->setPos(j,i*nthreads + tid,0);
-                    this->setPos((j+1)%row,i*nthreads + tid,1);
+                    this->setPos(j,i,0);
+                    this->setPos((j+1)%row,i,1);
                     //jump an extra position
                     j++;
                 }
             }
         }
-    }
+
     }
     return 1;
 }
