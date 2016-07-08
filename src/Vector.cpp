@@ -9,9 +9,7 @@ Vector::Vector(int newrow, int newcolumn)
     row = newrow;
     column = newcolumn;
     //create array
-    cout << row*column;
     arr = new int[row*column];
-
     string test;
     int k = 0;
     int h = 0;
@@ -19,12 +17,9 @@ Vector::Vector(int newrow, int newcolumn)
     ifstream  st("problem.csv",ios::in);
     getline(st,test);
     //read matrix with cars in
-
     while(getline(st,test))
     {
-        if (k ==0){
-        cout << test;}
-        w= 0;
+        w = 0;
         h = 0;
         for (int i = 0; i < test.size(); i++)
         {
@@ -64,8 +59,6 @@ void Vector::writeFile(int name){
         }
         outputf << this->checkPos(i,column-1)<< "\n";
     }
-
-
     outputf.close();
     ss.clear();
 }
@@ -74,12 +67,11 @@ int Vector::iterateRed(){
     int nthreads, tid;
     #pragma omp parallel private(tid)
     {
-
     nthreads = omp_get_num_threads();
-
     tid = omp_get_thread_num();
-
+    //assigns each thread with own row
     for (int i = 0; i < row/nthreads + (row%nthreads)/(tid+1); i++){
+        //bool to check if firt position is free originally
         bool firstisFree = (this->checkPos(i*nthreads + tid, 0) == 0);
         for (int j = 0; j < this->column; j++)
         {
@@ -109,9 +101,10 @@ int Vector::iterateBlue(){
     {
     nthreads = omp_get_num_threads();
     tid = omp_get_thread_num();
+    //assigns each thread with own column
     for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
+        //bool to check if firt position is free originally
         bool firstisFree = (this->checkPos(0, i*nthreads + tid) == 0);
-
         for (int j = 0; j < row; j++)
         {
             if (this->checkPos(j,i*nthreads + tid)==1){
@@ -134,6 +127,7 @@ int Vector::iterateBlue(){
 void Vector::iterate(vector<int> steps){
     int i = 0;
         for (int j = 0; j < steps[i]+1; j++){
+            // check to see if we need to write a file
             if (j == steps[i]){
                 this->writeFile(steps[i]);
                 i++;
@@ -141,8 +135,10 @@ void Vector::iterate(vector<int> steps){
                     break;
                     }
                 }
+            //move blue cars
             this->iterateBlue();
             j++;
+            //check to see if we need to write a file
             if (j == steps[i]){
                 this->writeFile(steps[i]);
                 i++;
@@ -150,6 +146,7 @@ void Vector::iterate(vector<int> steps){
                     break;
                 }
             }
+            //move red cars
             this->iterateRed();
     }
 }
