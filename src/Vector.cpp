@@ -71,7 +71,7 @@ int Vector::iterateRed(){
     tid = omp_get_thread_num();
     //assigns each thread with own row
     for (int i = 0; i < row/nthreads + (row%nthreads)/(tid+1); i++){
-        //bool to check if firt position is free originally
+        //bool to check if first position is free originally
         bool firstisFree = (this->checkPos(i*nthreads + tid, 0) == 0);
         for (int j = 0; j < this->column; j++)
         {
@@ -83,6 +83,7 @@ int Vector::iterateRed(){
                 {
                     this->setPos(i*nthreads + tid,j,0);
                     this->setPos(i*nthreads + tid,(j+1)%column,2);
+                    //jump an extra position
                     j++;
 
                 }
@@ -103,7 +104,7 @@ int Vector::iterateBlue(){
     tid = omp_get_thread_num();
     //assigns each thread with own column
     for (int i = 0; i < column/nthreads + (column%nthreads)/(tid+1); i++){
-        //bool to check if firt position is free originally
+        //bool to check if first position is free originally
         bool firstisFree = (this->checkPos(0, i*nthreads + tid) == 0);
         for (int j = 0; j < row; j++)
         {
@@ -115,6 +116,7 @@ int Vector::iterateBlue(){
                 {
                     this->setPos(j,i*nthreads + tid,0);
                     this->setPos((j+1)%row,i*nthreads + tid,1);
+                    //jump an extra position
                     j++;
                 }
             }
